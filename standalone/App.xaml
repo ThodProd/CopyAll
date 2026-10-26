@@ -1,0 +1,9 @@
+﻿<Application x:Class="CopyAll.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:CopyAll"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <!-- Здесь можно добавить стили, если нужно -->
+    </Application.Resources>
+</Application>

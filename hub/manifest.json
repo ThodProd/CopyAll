@@ -1,0 +1,1 @@
+{"schemaVersion":1,"hubApi":1,"id":"copyall","version":"1.0.0","platform":"win-x64","ui":"ui/index.html","worker":{"executable":"worker/CopyAll.Worker.exe","arguments":[]},"permissions":["settings","dialog.folder","clipboard.write","files.export","worker"]}

@@ -3,6 +3,11 @@ using System.Text.Json;
 
 Console.InputEncoding = new UTF8Encoding(false);
 Console.OutputEncoding = new UTF8Encoding(false);
+if(args.Contains("--uninstall-context"))
+{
+    try { ContextMenu.Remove();return; }
+    catch(Exception e) { Console.Error.WriteLine(e.Message);Environment.ExitCode=1;return; }
+}
 while(await Console.In.ReadLineAsync() is { } line)
 {
     string? id = null;
@@ -14,13 +19,24 @@ while(await Console.In.ReadLineAsync() is { } line)
         var method = request.GetProperty("method").GetString();
         object result = method switch
         {
-            "describe" => new { name = "CopyAll", version = "1.0.0", api = 1 },
+            "describe" => new { name = "CopyAll", version = "1.1.0", api = 1 },
             "scan" => Scan(request.GetProperty("params")),
+            "context.status" => new { installed=ContextMenu.IsInstalled() },
+            "context.install" => ContextMenu.Install(),
+            "context.remove" => ContextMenu.Remove(),
+            "context.copy" => CopyPaths(request.GetProperty("params")),
             _ => throw new InvalidOperationException("Неизвестная команда.")
         };
         await Console.Out.WriteLineAsync(JsonSerializer.Serialize(new { jsonrpc = "2.0", id, result }));
     }
     catch(Exception ex) { await Console.Out.WriteLineAsync(JsonSerializer.Serialize(new { jsonrpc = "2.0", id, error = new { code = -32000, message = ex.Message } })); }
+}
+
+static object CopyPaths(JsonElement p)
+{
+    var input=JsonSerializer.SerializeToElement(new { path=p.GetProperty("path").GetString(),mode="full",includeHidden=true });
+    var result=JsonSerializer.SerializeToElement(Scan(input));
+    return new { clipboardText=result.GetProperty("text").GetString(),skipped=result.GetProperty("skipped").GetInt32() };
 }
 
 static object Scan(JsonElement p)

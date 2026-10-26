@@ -1,1 +1,26 @@
-{"schemaVersion":1,"hubApi":1,"id":"copyall","version":"1.0.0","platform":"win-x64","ui":"ui/index.html","worker":{"executable":"worker/CopyAll.Worker.exe","arguments":[]},"permissions":["settings","dialog.folder","clipboard.write","files.export","worker"]}
+{
+  "schemaVersion": 1,
+  "hubApi": 1,
+  "id": "copyall",
+  "version": "1.1.0",
+  "platform": "win-x64",
+  "ui": "ui/index.html",
+  "worker": {
+    "executable": "worker/CopyAll.Worker.exe",
+    "arguments": []
+  },
+  "permissions": [
+    "settings",
+    "dialog.folder",
+    "clipboard.write",
+    "files.export",
+    "worker"
+  ],
+  "mode": "embedded",
+  "cleanup": {
+    "executable": "worker/CopyAll.Worker.exe",
+    "arguments": [
+      "--uninstall-context"
+    ]
+  }
+}

@@ -8,3 +8,12 @@ $('scan').onclick=async()=>{const button=$('scan');button.disabled=true;status('
 $('copy').onclick=async()=>{try{await api('clipboard.write',{text:$('result').value});status('Список скопирован.');}catch(e){status(e.message);}};
 $('save').onclick=async()=>{try{const bytes=new TextEncoder().encode($('result').value);let binary='';for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));const r=await api('files.export',{name:'Структура.txt',base64:btoa(binary)});if(!r.canceled)status('Файл сохранён.');}catch(e){status(e.message);}};
 (async()=>{try{settings=await api('settings.get')||settings;$('path').value=settings.path||'';$('mode').value=settings.mode||'tree';$('hidden').checked=!!settings.includeHidden;$('scan').disabled=!settings.path;}catch(e){status(e.message);}})();
+
+async function contextAction(method){
+ const install=$('context-install'),remove=$('context-remove');install.disabled=remove.disabled=true;
+ try{const state=await api('worker.context.'+method);$('context-status').textContent=state.installed?'Пункт CopyAll установлен для текущего пользователя.':'Пункт CopyAll не установлен.';install.disabled=state.installed;remove.disabled=!state.installed;}
+ catch(e){$('context-status').textContent=e.message;install.disabled=remove.disabled=false;}
+}
+$('context-install').onclick=()=>contextAction('install');$('context-remove').onclick=()=>contextAction('remove');void contextAction('status');
+
+document.documentElement.dataset.theme=new URLSearchParams(location.search).get('theme')||'light';

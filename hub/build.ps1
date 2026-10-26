@@ -10,5 +10,5 @@ try {
     Copy-Item hub/ui (Join-Path $stage "ui") -Recurse
     Copy-Item (Join-Path $HubRoot "sdk/thodhub.js") (Join-Path $stage "ui/thodhub.js")
     Copy-Item hub/manifest.json (Join-Path $stage 'manifest.json')
-    & (Join-Path $HubRoot 'scripts/package-module.ps1') -PackageDirectory $stage -Repository 'ThodProd/CopyAll' -OutputDirectory $OutputDirectory -Notes 'Встроенный интерфейс, сканирование папок, копирование и экспорт; полноэкранный режим.'
+    & (Join-Path $HubRoot 'scripts/package-module.ps1') -PackageDirectory $stage -Repository 'ThodProd/CopyAll' -OutputDirectory $OutputDirectory -Notes 'Добавлены установка и удаление контекстного меню Windows. Правая кнопка папки копирует пути всех вложенных файлов. Пункт меню переживает обновления и удаляется при деинсталляции.'
 } finally { Pop-Location }

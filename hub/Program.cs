@@ -3,9 +3,9 @@ using System.Text.Json;
 
 Console.InputEncoding = new UTF8Encoding(false);
 Console.OutputEncoding = new UTF8Encoding(false);
-if(args.Contains("--uninstall-context"))
+if(args.Contains("--uninstall-context")||args.Contains("--register-integrations"))
 {
-    try { ContextMenu.Remove();return; }
+    try { if(args.Contains("--uninstall-context"))ContextMenu.Remove();else ContextMenu.Install();return; }
     catch(Exception e) { Console.Error.WriteLine(e.Message);Environment.ExitCode=1;return; }
 }
 while(await Console.In.ReadLineAsync() is { } line)
@@ -19,7 +19,7 @@ while(await Console.In.ReadLineAsync() is { } line)
         var method = request.GetProperty("method").GetString();
         object result = method switch
         {
-            "describe" => new { name = "CopyAll", version = "1.1.0", api = 1 },
+            "describe" => new { name = "CopyAll", version = "1.1.1", api = 1 },
             "scan" => Scan(request.GetProperty("params")),
             "context.status" => new { installed=ContextMenu.IsInstalled() },
             "context.install" => ContextMenu.Install(),

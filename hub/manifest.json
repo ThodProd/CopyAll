@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "hubApi": 1,
   "id": "copyall",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "platform": "win-x64",
   "ui": "ui/index.html",
   "worker": {
@@ -22,5 +22,11 @@
     "arguments": [
       "--uninstall-context"
     ]
+  },
+  "integration": {
+    "arguments": [
+      "--register-integrations"
+    ],
+    "executable": "worker/CopyAll.Worker.exe"
   }
 }

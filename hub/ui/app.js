@@ -9,11 +9,24 @@ $('copy').onclick=async()=>{try{await api('clipboard.write',{text:$('result').va
 $('save').onclick=async()=>{try{const bytes=new TextEncoder().encode($('result').value);let binary='';for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));const r=await api('files.export',{name:'Структура.txt',base64:btoa(binary)});if(!r.canceled)status('Файл сохранён.');}catch(e){status(e.message);}};
 (async()=>{try{settings=await api('settings.get')||settings;$('path').value=settings.path||'';$('mode').value=settings.mode||'tree';$('hidden').checked=!!settings.includeHidden;$('scan').disabled=!settings.path;}catch(e){status(e.message);}})();
 
+let contextState=null;
+function renderContext(state){
+ contextState=state;
+ $('context-status').textContent=state.modernInstalled?'CopyAll включён в первом меню Windows 11 для папок и файлов.':state.installed?'CopyAll включён в классическом меню. Для первого меню Windows 11 установите расширение.':'Пункт CopyAll не установлен.';
+ $('context-install').disabled=state.installed&&(!state.modernSupported||state.modernInstalled);
+ $('context-remove').disabled=!state.installed&&!state.modernInstalled;
+ $('context-trust').hidden=!state.modernSupported||state.trusted;
+}
 async function contextAction(method){
  const install=$('context-install'),remove=$('context-remove');install.disabled=remove.disabled=true;
- try{const state=await api('worker.context.'+method);$('context-status').textContent=state.installed?'Пункт CopyAll установлен для текущего пользователя.':'Пункт CopyAll не установлен.';install.disabled=state.installed;remove.disabled=!state.installed;}
- catch(e){$('context-status').textContent=e.message;install.disabled=remove.disabled=false;}
+ try{
+  if(method==='install'){
+   if(contextState?.modernSupported&&!contextState.trusted&&!$('trust-certificate').checked)throw new Error('Подтвердите доверие сертификату расширения перед установкой.');
+   $('context-status').textContent='Устанавливаем расширение Проводника… При запросе подтвердите UAC.';
+   await api('worker.context.install.start',{trustCertificate:$('trust-certificate').checked});
+   for(;;){await new Promise(r=>setTimeout(r,700));const job=await api('worker.context.install.status');if(job.running)continue;if(job.error)throw new Error(job.error);renderContext(job.state);break;}
+  }else renderContext(await api('worker.context.'+method));
+ }catch(e){$('context-status').textContent=e.message;install.disabled=remove.disabled=false;}
 }
 $('context-install').onclick=()=>contextAction('install');$('context-remove').onclick=()=>contextAction('remove');void contextAction('status');
-
 document.documentElement.dataset.theme=new URLSearchParams(location.search).get('theme')||'light';

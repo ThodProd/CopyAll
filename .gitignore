@@ -6,3 +6,4 @@ artifacts/
 *.log
 
 .hub-sdk/
+/target/

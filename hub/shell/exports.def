@@ -1,4 +1,0 @@
-LIBRARY CopyAll.Explorer
-EXPORTS
- DllGetClassObject
- DllCanUnloadNow

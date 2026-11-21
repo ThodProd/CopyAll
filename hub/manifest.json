@@ -2,21 +2,18 @@
   "schemaVersion": 1,
   "hubApi": 1,
   "id": "copyall",
-  "version": "1.1.2",
+  "version": "2.0.0",
   "platform": "win-x64",
+  "primaryLanguage": "Rust",
+  "mode": "embedded",
   "ui": "ui/index.html",
   "worker": {
     "executable": "worker/CopyAll.Worker.exe",
     "arguments": []
   },
   "permissions": [
-    "settings",
-    "dialog.folder",
-    "clipboard.write",
-    "files.export",
     "worker"
   ],
-  "mode": "embedded",
   "cleanup": {
     "executable": "worker/CopyAll.Worker.exe",
     "arguments": [
@@ -24,9 +21,9 @@
     ]
   },
   "integration": {
+    "executable": "worker/CopyAll.Worker.exe",
     "arguments": [
       "--register-integrations"
-    ],
-    "executable": "worker/CopyAll.Worker.exe"
+    ]
   }
 }

@@ -1,0 +1,22 @@
+[package]
+name = "copyall-worker"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+serde_json = "1"
+tempfile = "3"
+windows-version = "0.1"
+winreg = "0.56"
+windows = { workspace = true, features = [
+    "Win32_System_DataExchange",
+    "Win32_System_Memory",
+    "Win32_System_Registry",
+    "Win32_System_SystemInformation",
+    "Win32_System_Threading",
+    "Win32_UI_Shell",
+    "Win32_UI_WindowsAndMessaging",
+] }
+
+[build-dependencies]
+embed-resource = "3"
